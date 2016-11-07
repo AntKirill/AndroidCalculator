@@ -18,7 +18,7 @@ public class Div implements Expression {
     public BigDecimal evaluate() {
         BigDecimal numberQ = q.evaluate();
         if (numberQ.equals(BigDecimal.ZERO)) {
-            numberQ = new BigDecimal("0.000001");
+            numberQ = new BigDecimal("0.00000000000000000001");
         }
         return p.evaluate().divide(numberQ, 5, BigDecimal.ROUND_DOWN);
     }
