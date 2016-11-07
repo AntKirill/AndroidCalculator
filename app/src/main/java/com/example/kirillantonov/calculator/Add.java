@@ -16,6 +16,8 @@ public class Add implements Expression {
 
     @Override
     public BigDecimal evaluate() {
-        return p.evaluate().add(p.evaluate());
+        BigDecimal numberP = p.evaluate();
+        BigDecimal numberQ = q.evaluate();
+        return numberP.add(numberQ);
     }
 }

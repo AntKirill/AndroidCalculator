@@ -1,5 +1,7 @@
 package com.example.kirillantonov.calculator;
 
+import java.lang.*;
+import java.lang.Number;
 import java.math.BigDecimal;
 
 /**
@@ -46,14 +48,15 @@ public class Parser {
             if ('0' <= expr.charAt(it) && expr.charAt(it) <= '9') {
                 cur_token = Token.NUMBER;
                 int lastguy = it;
-                while (it < expr.length() && ('0' <= expr.charAt(it) && expr.charAt(it) <= '9' || expr.charAt(it) == '.')) {
+                while (lastguy < expr.length() && ('0' <= expr.charAt(lastguy) && expr.charAt(lastguy) <= '9' || expr.charAt(lastguy) == '.')) {
                     lastguy++;
                 }
-                cur_number = new BigDecimal(expr.substring(it, ++lastguy));
+                cur_number = new BigDecimal(expr.substring(it, lastguy));
                 it = lastguy;
                 return;
             }
             it++;
+            return;
         }
     }
 
@@ -89,9 +92,9 @@ public class Parser {
         Expression ans = null;
         if (cur_token == Token.MINUS) {
             next_token();
-            ans = new Sub(new Number(BigDecimal.ZERO), thirdLevel());
+            ans = new Sub(new Num(BigDecimal.ZERO), thirdLevel());
         } else if (cur_token == Token.NUMBER){
-            ans = new Number(cur_number);
+            ans = new Num(cur_number);
         } else if (cur_token == Token.BRACKET) {
             ans = firstLevel();
             next_token();
