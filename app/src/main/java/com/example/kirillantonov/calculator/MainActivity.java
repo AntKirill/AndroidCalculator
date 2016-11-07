@@ -14,7 +14,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private TextView view;
-    private String curText = "";
+    private String curText;
     private Parser parser;
 
     @Override
@@ -22,7 +22,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         view = (TextView) findViewById(R.id.textView);
+        if (view == null) {
+            view = (TextView) findViewById(R.id.textView2);
+        }
         parser = new Parser();
+        curText = "";
         updateText();
     }
 
@@ -56,6 +60,17 @@ public class MainActivity extends AppCompatActivity {
     public void onClickC(View pressed) {
         Button button = getButton(pressed);
         curText = "";
+        updateText();
+    }
+
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("curText", curText);
+    }
+
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        curText = savedInstanceState.getString("curText");
         updateText();
     }
 
