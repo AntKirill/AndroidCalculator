@@ -15,19 +15,14 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView view;
     private String curText = "";
-    private Long lastResalt = 0L;
-    private Long curResalt = 0L;
-    private boolean allCleare = true;
-    private enum Operation {Plus, Minus, Div, Mult};
-    private String lastOperation = "+";
-    private boolean exceptionState = false;
+    private Parser parser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         view = (TextView) findViewById(R.id.textView);
-        goToDefaultState();
+        parser = new Parser();
         updateText();
     }
 
@@ -39,14 +34,22 @@ public class MainActivity extends AppCompatActivity {
         return (Button) pressed;
     }
 
-    public void onClickNumber(View pressed) {
+    public void onSimpleClick(View pressed) {
         Button button = getButton(pressed);
-        String s = button.getText().toString();
-        curText = curText.concat(s);
-        if (s.equals("00")) curResalt *= 10;
-        curResalt = curResalt * 10 + Long.parseLong(s);
-        allCleare = false;
-        checkOverflow (curResalt);
+        curText = curText.concat(button.getText().toString());
+        updateText();
+    }
+
+    public void onOperationClick(View pressed) {
+        Button button = getButton(pressed);
+        String t = " ";
+        curText = curText.concat(t.concat(button.getText().toString().concat(t)));
+        updateText();
+    }
+
+    public void onClickEqual(View pressed) {
+        Button button = getButton(pressed);
+        curText = parser.parse(curText).evaluate().toString();
         updateText();
     }
 
@@ -58,70 +61,9 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void goToDefaultState() {
-        curText = "";
-        lastResalt = 0L;
-        curResalt = 0L;
-        allCleare = true;
-        lastOperation = "+";
-    }
-
     public void onClickC(View pressed) {
         Button button = getButton(pressed);
-        goToDefaultState();
-        updateText();
-    }
-
-    public void onCLickBinaryOperation(View pressed) {
-        Button button = getButton(pressed);
-        if (!evaluate()) return;
-        lastOperation = button.getText().toString();
-        curText = curText.concat(" ").concat(button.getText().toString()).concat(" ");
-        updateText();
-    }
-
-    private boolean evaluate() {
-        if (allCleare) return false;
-        Long ans;
-        switch (lastOperation) {
-            case "+":
-                ans = lastResalt + curResalt;
-                break;
-            case "-":
-                ans = lastResalt - curResalt;
-                break;
-            case "x":
-                ans = lastResalt * curResalt;
-                break;
-            case "/":
-                if (curResalt == 0) {
-                    curText = "Devising by zero";
-                    return false;
-                }
-                ans = lastResalt / curResalt;
-                break;
-            default:
-                ans = 0L;
-                break;
-        }
-        if (checkOverflow(ans)) return false;
-        lastResalt = ans;
-        curResalt = 0L;
-        curText = lastResalt.toString();
-        return true;
-    }
-
-    public void onCLickEqual(View pressed) {
-        Button button = getButton(pressed);
-        evaluate();
-        lastOperation = "+";
-        updateText();
-    }
-
-    public void onCLickDel(View pressed) {
-        if (!curText.isEmpty()) {
-            curText = curText.substring(0, curText.length() - 1);
-        }
+        curText = "";
         updateText();
     }
 
