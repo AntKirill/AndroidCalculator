@@ -16,6 +16,10 @@ public class Div implements Expression {
 
     @Override
     public BigDecimal evaluate() {
-        return p.evaluate().divide(q.evaluate(), 6);
+        BigDecimal numberQ = q.evaluate();
+        if (numberQ.equals(BigDecimal.ZERO)) {
+            numberQ = new BigDecimal("0.000001");
+        }
+        return p.evaluate().divide(numberQ, 5, BigDecimal.ROUND_DOWN);
     }
 }

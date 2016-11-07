@@ -14,7 +14,7 @@ public class Parser {
 
     private String expr;
 
-    private enum Token {PLUS, MINUS, MULT, DIV, NUMBER, BRACKET};
+    private enum Token {PLUS, MINUS, MULT, DIV, NUMBER, BRACKET, END};
     private Token cur_token;
     private int it = 0;
     private BigDecimal cur_number;
@@ -29,7 +29,7 @@ public class Parser {
                 case '-':
                     cur_token = Token.MINUS;
                     break;
-                case '*':
+                case 'x':
                     cur_token = Token.MULT;
                     break;
                 case '/':
@@ -58,6 +58,7 @@ public class Parser {
             it++;
             return;
         }
+        cur_token = Token.END;
     }
 
     private Expression firstLevel() {
@@ -95,14 +96,14 @@ public class Parser {
             ans = new Sub(new Num(BigDecimal.ZERO), thirdLevel());
         } else if (cur_token == Token.NUMBER){
             ans = new Num(cur_number);
+            next_token();
         } else if (cur_token == Token.BRACKET) {
             ans = firstLevel();
             next_token();
+            next_token();
         }
-        next_token();
         return ans;
     }
-
 
     public Expression parse(String expression) {
         this.expr = expression;

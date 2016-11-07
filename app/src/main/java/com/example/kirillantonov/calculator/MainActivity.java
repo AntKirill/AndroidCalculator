@@ -53,14 +53,6 @@ public class MainActivity extends AppCompatActivity {
         updateText();
     }
 
-    private boolean checkOverflow(Long k) {
-        if (k > (Integer.MAX_VALUE) || k < (Integer.MIN_VALUE)) {
-            curText = "Overflow";
-            return true;
-        }
-        return false;
-    }
-
     public void onClickC(View pressed) {
         Button button = getButton(pressed);
         curText = "";
